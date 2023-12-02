@@ -10,6 +10,7 @@ public class Main {
 
     public static void partOne(){
         String input = loadFile("inputTwo.txt");
+
         String[] lines = input.split("\n");
         int result = 0;
         int redMax = 12;
@@ -18,53 +19,72 @@ public class Main {
         boolean currentTrue;
 
         for (int i = 0;i<lines.length;i++){
-            System.out.println(lines[i]);
             currentTrue = true;
-            lines[i] = lines[i].substring(8);
+            lines[i] = lines[i].substring(lines[i].indexOf(":")+1);
 
             lines[i] = lines[i].replaceAll(",",";");
+            System.out.println(lines[i]);
             String[] linePart = lines[i].split(";");
-            for (String numbersColor : linePart) {
+
+
+            for (int counter = 0; counter<linePart.length;counter++) {
+                String numbersColor = linePart[counter];
+
+                numbersColor = numbersColor.replaceAll(" ", "");
+
                 if (numbersColor.contains("red")) {
-                    numbersColor = numbersColor.replaceAll(" red", "");
-                    numbersColor = numbersColor.replaceAll(" ", "");
-                    int numRed = Integer.parseInt(numbersColor);
-                    System.out.println(numRed);
+                    numbersColor = numbersColor.replaceAll("[a-z]", "");
+
+
+                    int numRed = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numRed > redMax) {
                         currentTrue = false;
-                        continue;
+                        System.out.println("too many red: " + numRed);
+                        break;
                     }
+
+
 
                 }
                 if (numbersColor.contains("blue")){
-                    numbersColor = numbersColor.replaceAll(" blue", "");
-                    numbersColor = numbersColor.replaceAll(" ", "");
-                    int numBlue = Integer.parseInt(numbersColor);
-                    System.out.println(numBlue);
+                    numbersColor = numbersColor.replaceAll("[a-z]", "");
+                    if (numbersColor.isEmpty()) numbersColor = "0";
+
+                    int numBlue = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numBlue > blueMax) {
                         currentTrue = false;
-                        continue;
+                        System.out.println("too many blue: " + numBlue);
+                        break;
                     }
+
                 }
 
                 if (numbersColor.contains("green")){
-                    numbersColor = numbersColor.replaceAll(" green", "");
-                    numbersColor = numbersColor.replaceAll(" ", "");
-                    int numGreen = Integer.parseInt(numbersColor);
-                    System.out.println(greenMax);
+                    numbersColor = numbersColor.replaceAll("[a-z]", "");
+                    if (numbersColor.isEmpty()) numbersColor = "0";
+
+                    int numGreen = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numGreen > greenMax) {
                         currentTrue = false;
-                        continue;
+                        System.out.println("too many green: " + numGreen);
+                        break;
                     }
+
                 }
+
+
             }
 
-            if (currentTrue) result += i+1;
+
+
+            if (currentTrue) {
+                result += i + 1;
+                System.out.println("true: " + (i+1));
+            }
+            else System.out.println("false: " + (i+1));
         }
 
-
-
-        //System.out.println(result);
+        System.out.println(result);
     }
 
     public static String loadFile(String filename) {
