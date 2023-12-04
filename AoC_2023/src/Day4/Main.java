@@ -2,10 +2,12 @@ package Day4;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        partOne();
+        //partOne();
+        partTwo();
     }
 
     public static void partOne(){
@@ -25,12 +27,6 @@ public class Main {
 
             String[] winningNumbersString = split[0].split(" ");
 
-            /*
-            for(String s: winningNumbersString){
-                System.out.println(s);
-            }
-             */
-
             int[] winningNumbers = new int[winningNumbersString.length];
             for(int j = 0; j<winningNumbersString.length;j++){
                 if(winningNumbersString[j].isBlank())continue;
@@ -45,18 +41,6 @@ public class Main {
             }
 
             int currentResult = 1;
-
-            /*
-            System.out.println("Winningnumbers");
-            for (int print : winningNumbers){
-                System.out.print(print);
-            }
-            System.out.println("actualNumbers");
-            for (int print : actualNumbers){
-                System.out.println(print);
-            }
-
-             */
 
             for(int number : actualNumbers){
                 for(int checkWinningNumber: winningNumbers){
@@ -75,6 +59,66 @@ public class Main {
 
     }
 
+    public static void partTwo(){
+        String inputRaw = loadFile("inputFour.txt");
+        System.out.println(inputRaw);
+        int result = 0;
+
+        String[] lines = inputRaw.split("\n");
+        for (int i =0; i<lines.length;i++){
+            int index = lines[i].indexOf(':');
+            lines[i] = lines[i].substring(index+1);
+            System.out.println(lines[i]);
+        }
+
+        int[] amountOfCards = new int[lines.length];
+        Arrays.fill(amountOfCards,1);
+
+        for (int i=0;i< lines.length;i++){
+            String[] split = lines[i].split("\\|");
+
+            String[] winningNumbersString = split[0].split(" ");
+
+            int[] winningNumbers = new int[winningNumbersString.length];
+            for(int j = 0; j<winningNumbersString.length;j++){
+                if(winningNumbersString[j].isBlank())continue;
+                winningNumbers[j] = Integer.parseInt(winningNumbersString[j]);
+            }
+
+            String[] actualNumbersString = split[1].split(" ");
+            int[] actualNumbers = new int[actualNumbersString.length];
+            for(int j = 0; j<actualNumbersString.length;j++){
+                if(actualNumbersString[j].isBlank())continue;
+                actualNumbers[j] = Integer.parseInt(actualNumbersString[j]);
+            }
+
+            int currentResult = 0;
+
+            for(int number : actualNumbers){
+                for(int checkWinningNumber: winningNumbers){
+                    if(number == 0)break;
+                    if (number == checkWinningNumber){
+                        currentResult +=1;
+                    }
+                }
+            }
+
+            System.out.println("Line: " + (i+1) + " Current_Result: " + currentResult+ " Amount of Cards: "+amountOfCards[i]);
+            if (currentResult == 0){
+                result += amountOfCards[i];
+                continue;
+            }
+
+            for(int x = 1;x<=currentResult;x++){
+                if(i+x ==amountOfCards.length)break;
+                System.out.println("Added "+amountOfCards[i]+ " to " + (i+x));
+                amountOfCards[i+x] += amountOfCards[i];
+            }
+            result += amountOfCards[i];
+        }
+        System.out.println(result);
+
+    }
     public static String loadFile(String filename) {
         InputStream stream = Day4.Main.class.getResourceAsStream(filename);
         try {
