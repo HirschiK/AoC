@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[] args) {
-        //partOne();
+        partOne();
         //partTwo();
     }
 
@@ -30,53 +30,36 @@ public class Main {
 
             for (int counter = 0; counter<linePart.length;counter++) {
                 String numbersColor = linePart[counter];
-
+                System.out.println(numbersColor);
                 numbersColor = numbersColor.replaceAll(" ", "");
 
                 if (numbersColor.contains("red")) {
-                    numbersColor = numbersColor.replaceAll("[a-z]", "");
-
-
                     int numRed = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numRed > redMax) {
                         currentTrue = false;
                         System.out.println("too many red: " + numRed);
                         break;
                     }
-
-
-
                 }
-                if (numbersColor.contains("blue")){
-                    numbersColor = numbersColor.replaceAll("[a-z]", "");
-                    if (numbersColor.isEmpty()) numbersColor = "0";
 
+                if (numbersColor.contains("blue")){
                     int numBlue = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numBlue > blueMax) {
                         currentTrue = false;
                         System.out.println("too many blue: " + numBlue);
                         break;
                     }
-
                 }
 
                 if (numbersColor.contains("green")){
-                    numbersColor = numbersColor.replaceAll("[a-z]", "");
-                    if (numbersColor.isEmpty()) numbersColor = "0";
-
                     int numGreen = Integer.parseInt(numbersColor.replaceAll("\\D", ""));
                     if (numGreen > greenMax) {
                         currentTrue = false;
                         System.out.println("too many green: " + numGreen);
                         break;
                     }
-
                 }
-
-
             }
-
-
 
             if (currentTrue) {
                 result += i + 1;
