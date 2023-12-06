@@ -212,8 +212,13 @@ public class Main {
             }
 
 
+            System.out.println("Initial seeds:");
+            for(long i : seedsInitial) System.out.print("[" + i + "]");
             System.out.println();
 
+            System.out.println("End Seeds");
+            for(long i : seedsEnd) System.out.print("[" + i + "]");
+            System.out.println();
 
             String seedToSoilMap = inputRaw.substring(inputRaw.indexOf("seed-to-soil map:"),inputRaw.indexOf("soil-to-fertilizer map:"));
             seedToSoilMap = seedToSoilMap.substring(seedToSoilMap.indexOf("\n")+1);
@@ -228,22 +233,27 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
+                //50 -> 48
 
                 for(int i = 0; i<seedsInitial.size();i++){
                     long currentIntialSeed = seedsInitial.get(i);
-                    long currenEndSeed = seedsInitial.get(i)+seedsEnd.get(i)-1;
+                    long currenEndSeed = seedsInitial.get(i)+seedsEnd.get(i);
                     if(currentIntialSeed>sourceEnd)continue;
                     if(currenEndSeed<sourceRangeStart)continue;
-                    System.out.println("Intital Seed: "+currentIntialSeed + " EndSeed: "+currenEndSeed);
-                    System.out.println("Source Range Start: "+sourceRangeStart + " SourceEnd:" + sourceEnd);
-                    if(currentIntialSeed>sourceRangeStart)seedToSoilInitial.add(currentIntialSeed);
-                    else seedToSoilInitial.add(sourceRangeStart);
-                    if(currenEndSeed>sourceEnd) seedToSoilEnd.add(sourceEnd);
-                    else seedToSoilEnd.add(currenEndSeed);
+                    //System.out.println("Intital Seed: "+currentIntialSeed + " EndSeed: "+currenEndSeed);
+                    //System.out.println("Source Range Start: "+sourceRangeStart + " SourceEnd:" + sourceEnd);
+                    if(currentIntialSeed>sourceRangeStart)seedToSoilInitial.add(currentIntialSeed+sourceToDestinationDiff);
+                    else seedToSoilInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEndSeed>sourceEnd) seedToSoilEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else seedToSoilEnd.add(currenEndSeed+sourceToDestinationDiff);
                 }
             }
-            for(long i: seedToSoilInitial) System.out.println(i);
+            System.out.println("seedtoSoil");
+            for(long i: seedToSoilInitial) System.out.print("["+i + "] ");
+            System.out.println();
+            for(long i : seedToSoilEnd) System.out.print("["+i + "] ");
 
 
             String soilToFertilizerMap = inputRaw.substring(inputRaw.indexOf("soil-to-fertilizer map:"),inputRaw.indexOf("fertilizer-to-water map:"));
@@ -258,21 +268,35 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<seedToSoilInitial.size();i++){
                     long currentIntial = seedToSoilInitial.get(i);
                     long currenEnd = seedToSoilInitial.get(i)+seedsEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd) {
+                        soilToFertilizerInitial.add(currentIntial);
+                        soilToFertilizerEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart) {
+                        soilToFertilizerInitial.add(currentIntial);
+                        soilToFertilizerEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)soilToFertilizerInitial.add(currentIntial);
-                    else soilToFertilizerInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) soilToFertilizerEnd.add(sourceEnd);
-                    else soilToFertilizerEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)soilToFertilizerInitial.add(currentIntial+sourceToDestinationDiff);
+                    else soilToFertilizerInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) soilToFertilizerEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else soilToFertilizerEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
-            for(long i: soilToFertilizerInitial) System.out.println(i);
+
+            System.out.println();
+            System.out.println("soiltoFert");
+            for(long i: soilToFertilizerInitial) System.out.print("["+i + "] ");
+            System.out.println();
+            for(long i : soilToFertilizerEnd) System.out.print("["+i + "] ");
 
             String fertilizerToWaterMap = inputRaw.substring(inputRaw.indexOf("fertilizer-to-water map:"),inputRaw.indexOf("water-to-light map:"));
             fertilizerToWaterMap = fertilizerToWaterMap.substring(fertilizerToWaterMap.indexOf("\n")+1);
@@ -286,18 +310,29 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<soilToFertilizerInitial.size();i++){
                     long currentIntial = soilToFertilizerInitial.get(i);
-                    long currenEnd = soilToFertilizerEnd.get(i)+seedsEnd.get(i);
+                    System.out.println("soiltofertend: " + soilToFertilizerEnd.size() + " seedtosoilend: "+ seedToSoilEnd.size());
+                    long currenEnd = soilToFertilizerEnd.get(i)+seedToSoilEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd && !fertilizerToWaterInitial.contains(currentIntial)) {
+                        if(fertilizerToWaterInitial.contains(currentIntial))continue;
+                        fertilizerToWaterInitial.add(currentIntial);
+                        fertilizerToWaterEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart && !fertilizerToWaterInitial.contains(currentIntial)) {
+                        fertilizerToWaterInitial.add(currentIntial);
+                        fertilizerToWaterEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)fertilizerToWaterInitial.add(currentIntial);
-                    else fertilizerToWaterInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) fertilizerToWaterEnd.add(sourceEnd);
-                    else fertilizerToWaterEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)fertilizerToWaterInitial.add(currentIntial+sourceToDestinationDiff);
+                    else fertilizerToWaterInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) fertilizerToWaterEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else fertilizerToWaterEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
 
@@ -313,18 +348,27 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<fertilizerToWaterInitial.size();i++){
                     long currentIntial = fertilizerToWaterInitial.get(i);
-                    long currenEnd = fertilizerToWaterEnd.get(i)+seedsEnd.get(i);
+                    long currenEnd = fertilizerToWaterEnd.get(i)+soilToFertilizerEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd) {
+                        waterToLightInitial.add(currentIntial);
+                        waterToLightEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart) {
+                        waterToLightInitial.add(currentIntial);
+                        waterToLightEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)waterToLightInitial.add(currentIntial);
-                    else waterToLightInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) waterToLightEnd.add(sourceEnd);
-                    else waterToLightEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)waterToLightInitial.add(currentIntial+sourceToDestinationDiff);
+                    else waterToLightInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) waterToLightEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else waterToLightEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
 
@@ -340,18 +384,27 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<waterToLightInitial.size();i++){
                     long currentIntial = waterToLightInitial.get(i);
-                    long currenEnd = waterToLightEnd.get(i)+seedsEnd.get(i);
+                    long currenEnd = waterToLightEnd.get(i)+fertilizerToWaterEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd) {
+                        lightToTemperatureInitial.add(currentIntial);
+                        lightToTemperatureEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart) {
+                        lightToTemperatureInitial.add(currentIntial);
+                        lightToTemperatureEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)lightToTemperatureInitial.add(currentIntial);
-                    else lightToTemperatureInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) lightToTemperatureEnd.add(sourceEnd);
-                    else lightToTemperatureEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)lightToTemperatureInitial.add(currentIntial+sourceToDestinationDiff);
+                    else lightToTemperatureInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) lightToTemperatureEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else lightToTemperatureEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
 
@@ -369,18 +422,27 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<fertilizerToWaterInitial.size();i++){
                     long currentIntial = lightToTemperatureInitial.get(i);
-                    long currenEnd = lightToTemperatureEnd.get(i)+seedsEnd.get(i);
+                    long currenEnd = lightToTemperatureEnd.get(i)+waterToLightEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd) {
+                        temperatureToHumidityInitial.add(currentIntial);
+                        temperatureToHumidityEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart) {
+                        temperatureToHumidityInitial.add(currentIntial);
+                        temperatureToHumidityEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)temperatureToHumidityInitial.add(currentIntial);
-                    else temperatureToHumidityInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) temperatureToHumidityEnd.add(sourceEnd);
-                    else temperatureToHumidityEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)temperatureToHumidityInitial.add(currentIntial+sourceToDestinationDiff);
+                    else temperatureToHumidityInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) temperatureToHumidityEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else temperatureToHumidityEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
 
@@ -396,29 +458,33 @@ public class Main {
                 line = line.substring(line.indexOf(" ")+1);
                 long rangeLength = Long.parseLong(line);
                 long sourceEnd = sourceRangeStart + rangeLength;
+                long sourceToDestinationDiff = destinationRangeStart -sourceRangeStart;
 
                 for(int i = 0; i<temperatureToHumidityInitial.size();i++){
                     long currentIntial = temperatureToHumidityInitial.get(i);
-                    long currenEnd = temperatureToHumidityEnd.get(i)+seedsEnd.get(i);
+                    long currenEnd = temperatureToHumidityEnd.get(i)+lightToTemperatureEnd.get(i);
 
-                    if(currentIntial>sourceEnd)continue;
-                    if(currenEnd<sourceRangeStart)continue;
+                    if(currentIntial>sourceEnd) {
+                        humidityToLocationInitial.add(currentIntial);
+                        humidityToLocationEnd.add(currenEnd);
+                        continue;
+                    }
+                    if(currenEnd<sourceRangeStart) {
+                        humidityToLocationInitial.add(currentIntial);
+                        humidityToLocationEnd.add(currenEnd);
+                        continue;
+                    }
 
-                    if(currentIntial>sourceRangeStart)humidityToLocationInitial.add(currentIntial);
-                    else humidityToLocationInitial.add(sourceRangeStart);
-                    if(currenEnd>sourceEnd) humidityToLocationEnd.add(sourceEnd);
-                    else humidityToLocationEnd.add(currenEnd);
+                    if(currentIntial>sourceRangeStart)humidityToLocationInitial.add(currentIntial+sourceToDestinationDiff);
+                    else humidityToLocationInitial.add(sourceRangeStart+sourceToDestinationDiff);
+                    if(currenEnd>sourceEnd) humidityToLocationEnd.add(sourceEnd+sourceToDestinationDiff);
+                    else humidityToLocationEnd.add(currenEnd+sourceToDestinationDiff);
                 }
             }
 
 
-
-            long lowest = humidityToLocationInitial.get(0);
-            for(long i: humidityToLocationInitial){
-                if(i < lowest) lowest = i;
-            }
             System.out.println();
-            System.out.print(lowest);
+            if(humidityToLocationInitial.isEmpty()) System.out.println("):");
 
         }
     }
