@@ -212,6 +212,8 @@ public class Main {
                             currentValueDeck = 5;
                         } else if (currentValueDeck == 2 && amountOfJokers >0) {
                             currentValueDeck = 4;
+                        } else if (currentValueDeck == 4 && amountOfJokers == 1) {
+                            currentValueDeck = 5;
                         } else if (currentValueDeck<4) {
                             currentValueDeck = 4;
                         }
