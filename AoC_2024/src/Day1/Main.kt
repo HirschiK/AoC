@@ -63,7 +63,7 @@ fun partTwo(input: String){
 }
 
 fun readFile(): String {
-    val path = Paths.get("").toAbsolutePath().toString() + "/AoC_2024/src/Day1/input.txt"
+    val path = Paths.get("").toAbsolutePath().toString() + "/AoC_2024/src/Day1/input.txt.txt"
     val bufferedReader: BufferedReader = File(path).bufferedReader()
     val inputString = bufferedReader.use { it.readText() }
 
